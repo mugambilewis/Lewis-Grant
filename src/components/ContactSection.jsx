@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import emailjs from '@emailjs/browser';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 
@@ -9,6 +10,7 @@ const ContactSection = () => {
     subject: '',
     message: ''
   });
+  const [status, setStatus] = useState('idle'); // idle | sending | sent | error
   const { toast } = useToast();
 
   const handleInputChange = (e) => {
@@ -20,11 +22,36 @@ const ContactSection = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for your message. I'll get back to you within 24 hours.",
-    });
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    setStatus('sending');
+
+    const templateParams = {
+      name: formData.name,
+      email: formData.email,
+      title: formData.subject,
+      message: formData.message
+    };
+
+    emailjs
+      .send('service_n9enh29', 'template_mr2b41g', templateParams, 'BnrvL-zPsyAd051K5')
+      .then(() => {
+        setStatus('sent');
+        toast({
+          title: 'Message Sent!',
+          description: "Thank you for your message. I'll get back to you within 24 hours."
+        });
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      })
+      .catch(() => {
+        setStatus('error');
+        toast({
+          title: 'Error',
+          description: 'Something went wrong. Please try again later.',
+          variant: 'destructive'
+        });
+      })
+      .finally(() => {
+        setTimeout(() => setStatus('idle'), 3000);
+      });
   };
 
   const contactInfo = [
@@ -34,7 +61,6 @@ const ContactSection = () => {
       value: 'lewisgrant.tech@email.com',
       link: 'mailto:lewisgrant.tech@email.com'
     },
-    
     {
       icon: MapPin,
       title: 'Location',
@@ -55,14 +81,14 @@ const ContactSection = () => {
           </p>
           <div className="w-24 h-1 bg-[#3366ff] mx-auto rounded-full mt-6"></div>
         </div>
-        
+
         <div className="grid lg:grid-cols-2 gap-16">
           {/* Contact Information */}
           <div>
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">
               Let's Start a Conversation
             </h3>
-            
+
             <div className="space-y-6 mb-8">
               {contactInfo.map((info, index) => (
                 <div key={index} className="flex items-center gap-4">
@@ -74,7 +100,10 @@ const ContactSection = () => {
                       {info.title}
                     </h4>
                     {info.link ? (
-                      <a href={info.link} className="text-gray-600 dark:text-gray-400 hover:text-[#3366ff] transition-colors cursor-hover">
+                      <a
+                        href={info.link}
+                        className="text-gray-600 dark:text-gray-400 hover:text-[#3366ff] transition-colors cursor-hover"
+                      >
                         {info.value}
                       </a>
                     ) : (
@@ -86,7 +115,7 @@ const ContactSection = () => {
                 </div>
               ))}
             </div>
-            
+
             <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl">
               <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
                 Response Time
@@ -96,7 +125,7 @@ const ContactSection = () => {
               </p>
             </div>
           </div>
-          
+
           {/* Contact Form */}
           <div>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -132,7 +161,7 @@ const ContactSection = () => {
                   />
                 </div>
               </div>
-              
+
               <div>
                 <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Project Type
@@ -155,7 +184,7 @@ const ContactSection = () => {
                   <option value="other">Other</option>
                 </select>
               </div>
-              
+
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Project Details
@@ -171,13 +200,29 @@ const ContactSection = () => {
                   placeholder="Please describe your project, timeline, and any specific requirements..."
                 ></textarea>
               </div>
-              
+
               <button
                 type="submit"
-                className="w-full px-8 py-4 bg-[#3366ff] text-white font-semibold rounded-lg hover:bg-[#2855cc] transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2 cursor-hover"
+                disabled={status === 'sending'}
+                className={`w-full px-8 py-4 font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-hover ${
+                  status === 'sending'
+                    ? 'bg-gray-400 text-white cursor-not-allowed'
+                    : status === 'sent'
+                    ? 'bg-green-600 text-white'
+                    : status === 'error'
+                    ? 'bg-red-600 text-white'
+                    : 'bg-[#3366ff] hover:bg-[#2855cc] text-white'
+                }`}
               >
-                <Send className="w-5 h-5" />
-                Send Message
+                {status === 'sending' && <span className="animate-pulse">Sending...</span>}
+                {status === 'sent' && 'Sent ✅'}
+                {status === 'error' && 'Failed ❌'}
+                {status === 'idle' && (
+                  <>
+                    <Send className="w-5 h-5" />
+                    Send Message
+                  </>
+                )}
               </button>
             </form>
           </div>
