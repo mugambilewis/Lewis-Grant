@@ -147,7 +147,7 @@ const HeroSection = () => {
           </div>
         </div>
         {/* Stats Section */}
-        <div className="grid grid-cols-3 gap-8 pt-8 bottom-8 dark:text-white">
+        <div className="grid grid-cols-3 gap-8 pt-8 bottom-4 dark:text-white">
           <AnimatedCounter end={100} label="Projects" icon={Code} />
           <AnimatedCounter end={30} label="Happy Clients" icon={Users} />
           <AnimatedCounter end={3} label="Years Experience" icon={Star} />
@@ -155,7 +155,7 @@ const HeroSection = () => {
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-          <span className="text-sm text-[#3366ff] mb-2">Scroll Down</span>
+          
           <ArrowDown className="w-6 h-6 text-[#3366ff] animate-bounce" />
         </div>
       </div>
