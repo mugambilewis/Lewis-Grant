@@ -6,6 +6,8 @@ import SkillsSection from '../components/SkillsSection';
 import ServicesSection from '../components/ServicesSection';
 import ProjectsSection from '../components/ProjectsSection';
 import ContactSection from '../components/ContactSection';
+import TestimonialsCarousel from '../components/TestimonialsCarousel';
+import FAQSection from '../components/FAQSection';
 import Footer from '../components/Footer';
 import ScrollToTop from '../components/ScrollToTop';
 {/*
@@ -24,6 +26,8 @@ const Index = () => {
         <ServicesSection />
         <ProjectsSection />
         <ContactSection />
+        <TestimonialsCarousel />
+        <FAQSection />
         <Footer />
         <ScrollToTop />
       </div>
