@@ -19,7 +19,7 @@ function Navigation() {
   }, []);
 
   const navItems = [
-    { label: 'Home', href: '#home' },
+    { label: 'Home', href: '#hero' },
     { label: 'About', href: '#about' },
     { label: 'Skills', href: '#skills' },
     { label: 'Services', href: '#services' },

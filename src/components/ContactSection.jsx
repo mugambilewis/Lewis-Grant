@@ -58,8 +58,8 @@ const ContactSection = () => {
     {
       icon: Mail,
       title: 'Email',
-      value: 'lewisgrant.tech@email.com',
-      link: 'mailto:lewisgrant.tech@email.com'
+      value: 'lewisgrant.tech@gmail.com',
+      link: 'mailto:lewisgrant.tech@gmail.com'
     },
     {
       icon: MapPin,
